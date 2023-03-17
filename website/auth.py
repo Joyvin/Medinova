@@ -109,4 +109,4 @@ def fill_details():
 # @login_required
 # def download(upload_id):
 #     upload = Upload.query.filter_by(id=upload_id).first()
-#     return send_file(BytesIO(upload.data), attachment_filename=upload.filename, as_attachment=True)
+#     return send_file(BytesIO(upload.image_data), attachment_filename=upload.image_file, as_attachment=True)

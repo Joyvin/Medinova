@@ -1,0 +1,34 @@
+
+
+header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.main {
+    height: 80vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px;
+}
+
+.main-text {
+    padding: 30px;
+    margin-bottom: 100px;
+}
+
+.square {
+    width: 98%;
+    margin: 1%;
+    height: 350px;
+    background-color: white;
+    text-align: center;
+    padding-top: 30px;
+}
+
+.navbar {
+    background-color: white;
+}
