@@ -4,6 +4,7 @@ from .models import User, Upload
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, login_user, current_user, logout_user
+from werkzeug.utils import secure_filename
 
 auth = Blueprint('auth', __name__)
 
@@ -75,10 +76,17 @@ def sign_up():
 def fill_details():
     if request.method == 'POST':
         image_file = request.files['image_file']
-        upload = Upload(filename=image_file.filename, data=image_file.read())
+        if not image_file:
+            return 'No image uploaded!', 400
+        pdf_file = request.files['pdf_file']
+        if not pdf_file:
+            return 'No pdf uploaded!', 400
+        image_mimetype = image_file.mimetype
+        pdf_mimetype = pdf_file.mimetype
+        upload = Upload(image_file=secure_filename(image_file.filename), image_data=image_file.read(), image_mimetype=image_mimetype, pdf_file=secure_filename(pdf_file.filename), pdf_data=pdf_file.read(), pdf_mimetype=pdf_mimetype, user_id=current_user.id)
         db.session.add(upload)
         db.session.commit()
-        return f'Uploaded: {image_file.filename}'
+        flash(f'Uploaded: {image_file.filename} and {pdf_file.filename}', category='success')
     return render_template("fill_details.html", user=current_user)
 
 # @auth.route('/download/<upload_id>', methods=['GET', 'POST'])

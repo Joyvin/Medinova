@@ -13,8 +13,11 @@ class User(db.Model, UserMixin): # type: ignore
 
 class Upload(db.Model):    
     id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(50))
-    data = db.Column(db.LargeBinary)
-    # pdf_file = db.Column(db.LargeBinary)
+    image_file = db.Column(db.String(50))
+    image_data = db.Column(db.LargeBinary)
+    image_mimetype = db.Column(db.Text, nullable=False)
+    pdf_file = db.Column(db.String(50))
+    pdf_data = db.Column(db.LargeBinary)
+    pdf_mimetype = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, default=datetime.datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
