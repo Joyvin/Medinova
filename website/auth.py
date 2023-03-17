@@ -19,7 +19,10 @@ def login():
             if check_password_hash(user.password, key):
                 flash('Logged In Successfully!', category='success')
                 login_user(user, remember=True)
-                return redirect(url_for('views.home'))
+                if user.id != 1:
+                    return redirect('/fill_details')
+                else:
+                    return redirect(url_for('views.home'))
             else:
                 flash('Incorrect password!, Try Again!', category='error')
         else:
@@ -61,8 +64,16 @@ def sign_up():
             db.session.commit()
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
-            return redirect(url_for('views.home')) # views.py --> home() function
-            # OR return redirect('/')
+            if new_user.id != 1:
+                new_user.person = "User"
+                db.session.add(new_user)
+                db.session.commit()
+                return redirect('/fill_details')
+            else:
+                new_user.person = "Admin"
+                db.session.add(new_user)
+                db.session.commit()                
+                return redirect(url_for('views.home'))
     return render_template("signup.html", user=current_user)
 
 # @auth.route('/fill_details', methods=['GET', 'POST'])
@@ -72,7 +83,7 @@ def sign_up():
 #     return render_template("fill_details.html", user=current_user)
 
 @auth.route('/fill_details', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def fill_details():
     if request.method == 'POST':
         image_file = request.files['image_file']
@@ -83,10 +94,15 @@ def fill_details():
             return 'No pdf uploaded!', 400
         image_mimetype = image_file.mimetype
         pdf_mimetype = pdf_file.mimetype
-        upload = Upload(image_file=secure_filename(image_file.filename), image_data=image_file.read(), image_mimetype=image_mimetype, pdf_file=secure_filename(pdf_file.filename), pdf_data=pdf_file.read(), pdf_mimetype=pdf_mimetype, user_id=current_user.id)
+        my_name = request.form['my_name']
+        emer_name = request.form['emer_name']
+        emer_phone = request.form['emer_phone']
+        emer_email = request.form['emer_email']
+        upload = Upload(image_file=secure_filename(image_file.filename), image_data=image_file.read(), image_mimetype=image_mimetype, pdf_file=secure_filename(pdf_file.filename), pdf_data=pdf_file.read(), pdf_mimetype=pdf_mimetype, my_name=my_name, emer_name=emer_name, emer_email=emer_email, emer_phone=emer_phone, user_id=current_user.id)
         db.session.add(upload)
         db.session.commit()
         flash(f'Uploaded: {image_file.filename} and {pdf_file.filename}', category='success')
+        return redirect(url_for('views.home'))
     return render_template("fill_details.html", user=current_user)
 
 # @auth.route('/download/<upload_id>', methods=['GET', 'POST'])
