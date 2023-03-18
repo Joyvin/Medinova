@@ -20,9 +20,9 @@ def login():
                 flash('Logged In Successfully!', category='success')
                 login_user(user, remember=True)
                 if user.id != 1:
-                    return redirect('/fill_details')
+                    return redirect('/')
                 else:
-                    return redirect(url_for('views.home'))
+                    return redirect('/admin')
             else:
                 flash('Incorrect password!, Try Again!', category='error')
         else:
@@ -68,12 +68,12 @@ def sign_up():
                 new_user.person = "User"
                 db.session.add(new_user)
                 db.session.commit()
-                return redirect('/fill_details')
+                return redirect('/')
             else:
                 new_user.person = "Admin"
                 db.session.add(new_user)
                 db.session.commit()                
-                return redirect(url_for('views.home'))
+                return redirect('/admin')
     return render_template("signup.html", user=current_user)
 
 # @auth.route('/fill_details', methods=['GET', 'POST'])
@@ -102,7 +102,7 @@ def fill_details():
         db.session.add(upload)
         db.session.commit()
         flash(f'Uploaded: {image_file.filename} and {pdf_file.filename}', category='success')
-        return redirect(url_for('views.home'))
+        # return redirect(url_for('views.home'))
     return render_template("fill_details.html", user=current_user)
 
 # @auth.route('/download/<upload_id>', methods=['GET', 'POST'])

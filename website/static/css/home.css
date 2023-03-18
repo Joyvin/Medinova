@@ -3,16 +3,16 @@
 header {
     display: flex;
     justify-content: flex-end;
-    padding: 20px;
+    /* padding: 20px; */
 }
 
 .main {
-    height: 80vh;
+    height: 60vh;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 30px;
+    padding: 20px;
 }
 
 .main-text {
