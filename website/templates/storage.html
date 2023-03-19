@@ -126,9 +126,9 @@
 			<div><h2>Your Medical Records</h2></div>
 			<div class="my-5">
 				<button class="btn bg-white shadow" id="utPic">
-					<i class="fas fa-file-upload me-2"></i>Upload Files
+					<i class="fas fa-file-upload mr-2"></i>Upload Files
 				</button>
-				<form id="uploadFile" method="post" action="/checkFace" enctype="multipart/form-data">
+				<form id="uploadFile" method="post" action="/uploadFile" enctype="multipart/form-data">
 					<input type="hidden" name="_token" :value="token">
 					<input id="files" name="image_file" type="file" multiple hidden>
 				</form>
@@ -169,14 +169,12 @@
 				  </div>
 				</div>
 			  </div>
-		</main>				
+		</main>
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
 
 
-	<script src="static/js/dashboard.js"></script>
-	<script src="static/js/storage.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -196,6 +194,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
+	<script src="static/js/dashboard.js"></script>
+	<script src="static/js/storage.js"></script>
 </body>
 
 </html>

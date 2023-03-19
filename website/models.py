@@ -2,6 +2,30 @@ from . import db
 from flask_login import UserMixin
 import datetime
 
+class Note(db.Model): # type: ignore
+    id = db.Column(db.Integer, primary_key=True)
+    data = db.Column(db.String(100000)) 
+    date = db.Column(db.DateTime, default=datetime.datetime.now)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class To_Dos(db.Model): # type: ignore
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable = False)
+    desc = db.Column(db.String(500), nullable = False)
+    date_created = db.Column(db.DateTime, default = datetime.datetime.now)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    def __repr__(self) -> str:
+        return f"{self.id} - {self.title}"
+    
+class Appoint(db.Model): # type: ignore
+    id = db.Column(db.Integer, primary_key=True)
+    t = db.Column(db.String(200), nullable = False)
+    d = db.Column(db.String(500), nullable = False)
+    dc = db.Column(db.DateTime, default = datetime.datetime.now)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    def __repr__(self) -> str:
+        return f"{self.id} - {self.t}"
+
 class User(db.Model, UserMixin): # type: ignore
     id = db.Column(db.Integer, primary_key=True)
     image_file = db.Column(db.String(50))
@@ -15,7 +39,10 @@ class User(db.Model, UserMixin): # type: ignore
     uploads = db.relationship('Upload')
     diabetes = db.relationship('Diabetes')
     hearts = db.relationship('Heart')
-    parkinsons = db.relationship('Diabetes')
+    parkinsons = db.relationship('Park')
+    notes = db.relationship('Note')
+    todos = db.relationship('To_Dos')
+    appoints = db.relationship('Appoint')
 
 class Diabetes(db.Model): # type: ignore
     id = db.Column(db.Integer, primary_key=True)

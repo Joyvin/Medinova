@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import User, Upload, Diabetes, Heart, Park
+from .models import User, Upload, Diabetes, Heart, Park, Note, Appoint, To_Dos
 import requests
 from . import db
 from .diabetes import my_diabetes
@@ -52,7 +52,13 @@ def admin():
 
 @views.route('/storage')
 def index():
-    return render_template("storage.html", user=current_user)
+    blob_service_client = BlobServiceClient(account_url="https://medistorage.blob.core.windows.net/", credential="Wkgdqz4BTnzbN3DdmxIpvDAsV7Y0H2yW489m0AFggD+iEsSmeISD5MWNtICaagrPVLLlq2b9pPGd+AStKALxBA==")
+    container_client = blob_service_client.get_container_client(container='imgs')
+
+    blob_list = container_client.list_blobs()
+    dirs = [i.split('/')[1] for i in blob_list if i.name.split('/')[0] == current_user.username]
+    print(dirs)
+    return render_template("storage.html", user=current_user, dirs=dirs)
 
 def scan(src):
     url = "https://medinova-func.azurewebsites.net/api/medifunc?task=face"
@@ -182,10 +188,10 @@ def diabetes():
         if pred_diabetes[0] == 1:
             flash('You can have Diabetes', category="error")
             print("Probability for diabetes: ", pred_diabetes[1])
-            return redirect('/diab_yes')
+            # return redirect('/diab_yes')
         else: 
             flash('You cannot have Diabetes', category="success")
-            return redirect('/diab_no')
+            # return redirect('/diab_no')
     return render_template('diabetes_form.html', user=current_user)
 
 @views.route('/heart', methods=['POST', 'GET'])
@@ -193,7 +199,7 @@ def heart():
     if request.method == 'POST':
         age = float(request.form['age'])
         s = request.form['sex']
-        if s == 'male':
+        if s == 'M':
             sex = 1.0
         else:
             sex = 0.0
@@ -213,7 +219,7 @@ def heart():
         db.session.add(new_heart)
         db.session.commit()
         if pred_heart[0] == 1:
-            flash('You can have Heart Disease', category="error")
+            flash("You can have Heart Disease.", category="error")
 
         else: 
             flash('You cannot have Heart Disease', category="success")
@@ -233,16 +239,16 @@ def check():
         user = User.query.filter_by(username = res).first()
         return render_template('records.html', user=user)
 
-# @views.route('/uploadFile', methods=['POST'])
-# def upload():
-#     image_file = request.files['image_file']
-#     if not image_file:
-#         return 'No image uploaded!', 400
-#     else:
-#         blob_service_client = BlobServiceClient(account_url="https://medistorage.blob.core.windows.net/", credential="Wkgdqz4BTnzbN3DdmxIpvDAsV7Y0H2yW489m0AFggD+iEsSmeISD5MWNtICaagrPVLLlq2b9pPGd+AStKALxBA==")
-#         blob_client = blob_service_client.get_blob_client(container="imgs", blob = name)
-#         blob_client.upload_blob(image_file.read())
-#         return redirect('/storage')
+@views.route('/uploadFile', methods=['POST'])
+def upload():
+    image_file = request.files['image_file']
+    if not image_file:
+        return 'No image uploaded!', 400
+    else:
+        blob_service_client = BlobServiceClient(account_url="https://medistorage.blob.core.windows.net/", credential="Wkgdqz4BTnzbN3DdmxIpvDAsV7Y0H2yW489m0AFggD+iEsSmeISD5MWNtICaagrPVLLlq2b9pPGd+AStKALxBA==")
+        blob_client = blob_client = blob_service_client.get_blob_client(container="imgs", blob = current_user.username + '/' + image_file.filename)
+        blob_client.upload_blob(image_file.read())
+        return redirect('/storage')
 
 @views.route('/park', methods=['POST', 'GET'])
 def park():
@@ -282,3 +288,133 @@ def park():
 @views.route('/analytical_tests', methods=['GET', 'POST'])
 def analytics():
     return render_template("analytical_tests.html", user=current_user)
+
+@views.route('/note', methods=['GET', 'POST'])
+def note():
+    if request.method == 'POST':
+        note = request.form.get('note')
+        my_note = str(note)
+        if len(my_note) < 1:
+            flash("Note is too short!", category='error')
+        else:
+            new_note = Note(data=note, user_id=current_user.id)
+            db.session.add(new_note)
+            db.session.commit()
+            flash("Note added!", category='success')
+    return render_template("notes.html", user=current_user)
+
+@views.route('/todo', methods=['GET', 'POST'])
+def todo_html():
+    if request.method == 'POST':
+        title = request.form['title']
+        desc = request.form['desc']
+        if len(title) < 1 or len(desc) < 1:
+            flash("ToDo is too short!", category='error')
+        else:
+            todo = To_Dos(title=title, desc=desc, user_id=current_user.id)
+            db.session.add(todo)
+            db.session.commit()
+            flash("Todo added!", category='success')
+    return render_template("todo.html", user=current_user)
+
+@views.route('/update/<int:id>', methods=['GET', 'POST'])
+def update_todo(id):
+    if request.method == 'POST':
+        title = request.form['title']
+        desc = request.form['desc']
+        todo = To_Dos.query.filter_by(id=id).first()
+        todo.title = title
+        todo.desc = desc
+        db.session.add(todo)
+        db.session.commit()
+        return redirect('/todo')
+    todo = To_Dos.query.filter_by(id=id).first()
+    return render_template("update.html", todo=todo, user=current_user)
+
+@views.route('/edit/<int:id>', methods=['GET', 'POST'])
+def edit_profile(id):
+    if request.method == 'POST':
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        user = User.query.filter_by(id=id).first()
+        user.firstname = firstname
+        user.lastname = lastname
+        db.session.add(user)
+        db.session.commit()
+        return redirect('/')
+    user = User.query.filter_by(id=id).first()
+    return render_template("edit_profile.html", user=current_user)
+
+@views.route('/delete/<int:id>')
+def delete_todo(id):
+    todo = To_Dos.query.filter_by(id=id).first()
+    if todo.user_id == current_user.id:
+        db.session.delete(todo)
+        db.session.commit()
+        return redirect('/todo')
+    todo = To_Dos.query.filter_by(id=id).first()
+    return render_template("todo.html", todo=todo, user=current_user)
+
+@views.route('/appoint', methods=['GET', 'POST'])
+def appoint_html():
+    if request.method == 'POST':
+        t = request.form['t']
+        d = request.form['d']
+        # ti = str(t)
+        # de = str(d)
+        if len(t) < 1 or len(d) < 1:
+            flash("Appointment is too short!", category='error')
+        else:
+            appointed = Appoint(t=t, d=d, user_id=current_user.id)
+            db.session.add(appointed)
+            db.session.commit()
+            flash("Appointment added!", category='success')
+    return render_template("appointment.html", user=current_user)
+
+@views.route('/appoint_update/<int:id>', methods=['GET', 'POST'])
+def update_appoint(id):
+    if request.method == 'POST':
+        t = request.form['t']
+        d = request.form['d']
+        appointed = Appoint.query.filter_by(id=id).first()
+        appointed.t = t
+        appointed.d = d
+        db.session.add(appointed)
+        db.session.commit()
+        return redirect('/appoint')
+    appointed = Appoint.query.filter_by(id=id).first()
+    return render_template("appoint_update.html", appointed=appointed, user=current_user)
+
+@views.route('/appoint_delete/<int:id>')
+def delete_appoint(id):
+    appointed = Appoint.query.filter_by(id=id).first()
+    if appointed.user_id == current_user.id:
+        db.session.delete(appointed)
+        db.session.commit()
+        return redirect('/appoint')
+    appointed = Appoint.query.filter_by(id=id).first()
+    return render_template("appointment.html", appointed=appointed, user=current_user)
+
+@views.route('/delete-note', methods=['POST'])
+def delete_note():
+    note = json.loads(request.data)
+    noteId = note['noteId']
+    note = Note.query.get(noteId)
+    if note:
+        if note.user_id == current_user.id:
+            db.session.delete(note)
+            db.session.commit()
+            redirect('notes.html')
+    return jsonify({})
+
+@views.route('/diab_reversal')
+def diab_reversal():
+    return render_template("diab_reversal.html", user=current_user)
+
+@views.route('/diab_yes')
+def diab_yes():
+    return render_template("diab_popup_yes.html", user=current_user)
+
+@views.route('/diab_no')
+def diab_no():
+    return render_template("diab_popup_no.html", user=current_user)
