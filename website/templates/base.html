@@ -83,7 +83,34 @@
                     </li> -->
                     {% elif user.id == 1 %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin">Admin</a>
+                        <a class="nav-link" href="/admin">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin_board">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <img class="nav-link" src="static/images/avatar.png" class="user"
+                            style="width: 53px; height: 50px; border-radius: 50%; cursor: pointer; display: flex; justify-content: flex-end;"
+                            onclick="toggleMenu()">
+                        <div class="sub-menu-wrap" id="subMenu">
+                            <div class="sub-menu">
+                                <div class="user-info">
+                                    <img src="static/images/avatar.png">
+                                    <h5>{{user.username}}</h5>
+                                </div>
+                                <hr>
+                                <a href="/dashboard" class="sub-menu-link" style="text-decoration: none;">
+                                    <i class="fa-solid fa-gear"></i>
+                                    <p>Dashboard</p>
+                                    <span>></span>
+                                </a>
+                                <a href="/logout" class="sub-menu-link" style="text-decoration: none;">
+                                    <i class="fa-solid fa-right-from-bracket"></i>
+                                    <p>Logout</p>
+                                    <span>></span>
+                                </a>
+                            </div>
+                        </div>
                     </li>
                     <li class="nav-item"><a class="nav-link" id="logout" href="/logout">Logout</a></li>
                     {% else %}

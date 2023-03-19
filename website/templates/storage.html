@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        crossorigin="anonymous" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="static/css/base.css">
+	<link rel="stylesheet" href="static/css/fill_details.css">
+	<link rel="stylesheet" href="static/css/style.css">
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="icon" href="{{url_for('static', filename='images/HealtholiteLogoMain.png')}}">
+	<!-- My CSS -->
+	<link rel=" stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+		integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="static/css/dashboard.css">
+
+	<title>Medinova</title>
+</head>
+
+<body>
+	<!-- SIDEBAR -->
+	<section id="sidebar">
+		<a style="text-decoration: none;" href="#" class="brand">
+			<i class='bx bxs-smile'></i>
+			<span class="text">Medinova</span>
+		</a>
+		<ul class="side-menu top">
+			<li>
+				<a style="text-decoration: none;" href="/">
+					<i class='bx bxs-dashboard'></i>
+					<span class="text">Home</span>
+				</a>
+			</li>
+			<li>
+				<a style="text-decoration: none;" href="/about">
+					<i class='bx bxs-dashboard'></i>
+					<span class="text">About Us</span>
+				</a>
+			</li>
+			<li>
+				<a style="text-decoration: none;" href="/fill_details">
+					<i class='bx bxs-dashboard'></i>
+					<span class="text">Profile Details</span>
+				</a>
+			</li>
+			<li class="active">
+				<a style="text-decoration: none;" href="#">
+					<i class='bx bxs-dashboard'></i>
+					<span class="text">Dashboard</span>
+				</a>
+			</li>
+			<li>
+				<a style="text-decoration: none;" href="#">
+					<i class='bx bxs-shopping-bag-alt'></i>
+					<span class="text">My Store</span>
+				</a>
+			</li>
+			<li>
+				<a style="text-decoration: none;" href="/analytical_tests">
+					<i class='bx bxs-doughnut-chart'></i>
+					<span class="text">Analytical MedTest</span>
+				</a>
+			</li>
+			<li>
+				<a style="text-decoration: none;" href="#">
+					<i class='bx bxs-message-dots'></i>
+					<span class="text">Message</span>
+				</a>
+			</li>
+			<li>
+				<a style="text-decoration: none;" href="#">
+					<i class='bx bxs-group'></i>
+					<span class="text">Team</span>
+				</a>
+			</li>
+		</ul>
+		<ul class="side-menu">
+			<li>
+				<a style="text-decoration: none;" href="#">
+					<i class='bx bxs-cog'></i>
+					<span class="text">Settings</span>
+				</a>
+			</li>
+			<li>
+				<a style="text-decoration: none;" href="/logout" class="logout">
+					<i class='bx bxs-log-out-circle'></i>
+					<span class="text">Logout</span>
+				</a>
+			</li>
+		</ul>
+	</section>
+	<!-- SIDEBAR -->
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+		<nav>
+			<i class='bx bx-menu'></i>
+			<a href="#" class="nav-link">Categories</a>
+			<form action="#">
+				<div class="form-input">
+					<input type="search" placeholder="Search...">
+					<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+				</div>
+			</form>
+			<input type="checkbox" id="switch-mode" hidden>
+			<label for="switch-mode" class="switch-mode"></label>
+			<a href="#" class="notification">
+				<i class='bx bxs-bell'></i>
+				<span class="num">8</span>
+			</a>
+			<a href="#" class="profile">
+				<img src="static/images/avatar.png" onclick="toggleMenu()">
+			</a>
+		</nav>
+		<!-- NAVBAR -->
+
+		<!-- MAIN -->
+		<main>
+			<div><h2>Your Medical Records</h2></div>
+			<div class="my-5">
+				<button class="btn bg-white shadow" id="utPic">
+					<i class="fas fa-file-upload me-2"></i>Upload Files
+				</button>
+				<form id="uploadFile" method="post" action="/checkFace" enctype="multipart/form-data">
+					<input type="hidden" name="_token" :value="token">
+					<input id="files" name="image_file" type="file" multiple hidden>
+				</form>
+			</div>
+			<div class="text-center">
+				<div class="row align-items-start">
+				  <div class="col">
+					<div class="card bg-light">
+						<h5 class=" p-2">Document Name</h5>
+						<div class="card p-2 m-2">
+						<img src="/images/dash.svg" height="200px"></div>
+						<p>Submitted On Date</p>
+					</div>
+				  </div>
+				  <div class="col">
+					<div class="card bg-light">
+						<h5 class=" p-2">Document Name</h5>
+						<div class="card p-2 m-2">
+						<img src="/images/dash.svg" height="200px"></div>
+						<p>Submitted On Date</p>
+					</div>
+				  </div>
+				  <div class="col">
+					<div class="card bg-light">
+						<h5 class=" p-2">Document Name</h5>
+						<div class="card p-2 m-2">
+						<img src="/images/dash.svg" height="200px"></div>
+						<p>Submitted On Date</p>
+					</div>
+				  </div>
+				  <div class="col">
+					<div class="card bg-light">
+						<h5 class=" p-2">Document Name</h5>
+						<div class="card p-2 m-2">
+						<img src="/images/dash.svg" height="200px"></div>
+						<p>Submitted On Date</p>
+					</div>
+				  </div>
+				</div>
+			  </div>
+		</main>				
+		<!-- MAIN -->
+	</section>
+	<!-- CONTENT -->
+
+
+	<script src="static/js/dashboard.js"></script>
+	<script src="static/js/storage.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

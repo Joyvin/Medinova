@@ -30,8 +30,12 @@ Sign Up
                                 </button>
                             </a>
                         </div>
-                        <form method="POST">
+                        <form method="POST" enctype="multipart/form-data">
                             <div class="mt-3">
+                                <div class="mb-3">
+                                    <label class="form-label" for="image_file">Upload Image</label>
+                                    <input type="file" class="form-control" name="image_file" id="image_file">
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="email">Email</label>
                                     <input type="email" class="form-control" name="email" id="email"

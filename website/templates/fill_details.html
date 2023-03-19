@@ -15,7 +15,7 @@
 	<link rel="stylesheet" href="static/css/base.css">
 	<link rel="stylesheet" href="static/css/fill_details.css">
 	<link rel="stylesheet" href="static/css/style.css">
-	<link rel="icon" href="{{url_for('static', filename='images/He.png')}}">
+	<link rel="icon" href="{{url_for('static', filename='images/HealtholiteLogoMain.png')}}">
 	<!-- Boxicons -->
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 	<!-- My CSS -->
@@ -30,9 +30,8 @@
 
 	<!-- SIDEBAR -->
 	<section id="sidebar">
-		<a style="text-decoration: none;" href="#" class="brand">
-			<i class='bx bxs-smile'></i>
-			<span class="text">Medinova</span>
+		<a style="text-decoration: none; display: flex; justify-content: center;" href="#" class="brand">
+			<img src="static/images/LogoVertical.png" style="width: 200px; margin-top: 20px;">
 		</a>
 		<ul class="side-menu top">
 			<li>
@@ -60,27 +59,15 @@
 				</a>
 			</li>
 			<li>
-				<a style="text-decoration: none;" href="#">
-					<i class='bx bxs-shopping-bag-alt'></i>
-					<span class="text">My Store</span>
-				</a>
-			</li>
-			<li>
-				<a style="text-decoration: none;" href="#">
+				<a style="text-decoration: none;" href="/analytical_tests">
 					<i class='bx bxs-doughnut-chart'></i>
-					<span class="text">Analytics</span>
+					<span class="text">Analytical MedTest</span>
 				</a>
 			</li>
 			<li>
-				<a style="text-decoration: none;" href="#">
+				<a style="text-decoration: none;" href="http://192.168.137.16:8080/" target="_blank">
 					<i class='bx bxs-message-dots'></i>
 					<span class="text">Message</span>
-				</a>
-			</li>
-			<li>
-				<a style="text-decoration: none;" href="#">
-					<i class='bx bxs-group'></i>
-					<span class="text">Team</span>
 				</a>
 			</li>
 		</ul>
@@ -122,7 +109,7 @@
 				<span class="num">8</span>
 			</a>
 			<a href="#" class="profile">
-				<img src="static/images/avatar.png" onclick="toggleMenu()">
+				<img src="https://medistorage.blob.core.windows.net/imgs/{{user.username}}-face.jpeg" onclick="toggleMenu()">
 			</a>
 		</nav>
 		<!-- NAVBAR -->
@@ -152,18 +139,23 @@
 					<div class="col-md-3 border-right">
 						<div class="d-flex flex-column align-items-center text-center p-3 py-5"><img
 								class="rounded-circle mt-5" width="150px"
-								src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span
+								src="https://medistorage.blob.core.windows.net/imgs/{{user.username}}-face.jpeg"><br><span
 								class="font-weight-bold">{{user.username}}</span><span
 								class="text-black-50">{{user.email}}</span><span> </span></div>
-						<form method="POST">
-						<div class="mb-3">
-							<label class="form-label" for="image_file">Upload Image</label>
-							<input type="file" class="form-control" name="image_file" id="image_file">
-						</div>
-						<div class="mb-3">
-							<label class="form-label" for="pdf_file">Upload PDF</label>
-							<input type="file" class="form-control" name="pdf_file" id="pdf_file">
-						</div>
+						<form action="/fill_details" method="POST">
+							<!-- <div class="d-none">
+							<div class="mb-3">
+								<label class="form-label" for="image_file">Upload Image</label>
+								<input type="file" class="form-control" name="image_file" id="image_file">
+							</div>
+							<div class="mb-3">
+								<label class="form-label" for="pdf_file">Upload PDF</label>
+								<input type="file" class="form-control" name="pdf_file" id="pdf_file">
+							</div>
+						</div>	 -->
+							<div class="mb-3">
+								<img src="static/images/Forms-amico.svg">
+							</div>
 					</div>
 
 					<div class="col-md-5 border-right">
@@ -172,35 +164,167 @@
 								<h4 class="text-right">Profile Settings</h4>
 							</div>
 							<div class="row mt-2">
-								<div class="col-md-6"><label for="my_name" class="labels">Name</label><input type="text"
-										class="form-control" placeholder="Enter Full Name" name="my_name" id="my_name"></div>
-								<div class="col-md-6"><label for="age" class="labels">Age</label><input type="text"
-										class="form-control" value="" placeholder="Age" name="age" id="age"></div>
-								<div class="col-md-6"><label for="dob" class="labels">D.O.B</label><input type="text"
-										class="form-control" value="" placeholder="Date of Birth" name="dob" id="dob"></div>
-								<div class="col-md-6"><label for="gender" class="labels">Gender</label><input type="text"
-										class="form-control" value="" placeholder="Gender M/F" name="gender" id="gender"></div>
+								<div class="col-md-6"><label for="my_name" class="labels">Name</label>
+									{% if user.uploads %}
+									{% for up in user.uploads %}
+									{% if up.my_name %}
+									<div class="bg-soft-dark curves container p-2 text-dark">{{up.my_name}}</div>
+									{% else %}
+									<input type="text" class="form-control" placeholder="Full Name" name="my_name"
+										id="my_name">
+									{% endif %}
+									{% endfor %}
+									{% else %}
+									<input type="text" class="form-control" placeholder="Full Name" name="my_name"
+										id="my_name">
+									{% endif %}
+								</div>
+								<div class="col-md-6"><label for="age" class="labels">Age</label>
+									{% if user.uploads %}
+									{% for up in user.uploads %}
+									{% if up.age %}
+									<div class="bg-soft-dark curves container p-2 text-dark">{{up.age}}</div>
+									{% else %}
+									<input type="number" class="form-control" placeholder="Age" name="age" id="age">
+									{% endif %}
+									{% endfor %}
+									{% else %}
+									<input type="number" class="form-control" placeholder="Age" name="age" id="age">
+									{% endif %}
+								</div>
+								<div class="col-md-6"><label for="dob" class="labels">D.O.B</label>
+									{% if user.uploads %}
+									{% for up in user.uploads %}
+									{% if up.dob %}
+									<div class="bg-soft-dark curves container p-2 text-dark">{{up.dob}}</div>
+									{% else %}
+									<input type="text" class="form-control" placeholder="Date of Birth" name="dob"
+										id="dob">
+									{% endif %}
+									{% endfor %}
+									{% else %}
+									<input type="text" class="form-control" placeholder="Date of Birth" name="dob"
+										id="dob">
+									{% endif %}
+								</div>
+								<div class="col-md-6"><label for="gender" class="labels">Gender</label>
+									{% if user.uploads %}
+									{% for up in user.uploads %}
+									{% if up.gender %}
+									<div class="bg-soft-dark curves container p-2 text-dark">{{up.gender}}</div>
+									{% else %}
+									<input type="text" class="form-control" placeholder="Gender M/F" name="gender"
+										id="gender">
+									{% endif %}
+									{% endfor %}
+									{% else %}
+									<input type="text" class="form-control" placeholder="Gender M/F" name="gender"
+										id="gender">
+									{% endif %}
+								</div>
+								<div class="row mt-3">
+									<div class="col-md-12"><label for="height" class="labels">Height</label>
+										{% if user.uploads %}
+										{% for up in user.uploads %}
+										{% if up.height %}
+										<div class="bg-soft-dark curves container p-2 text-dark">{{up.height}}</div>
+										{% else %}
+										<input type="number" class="form-control" placeholder="Height in cm"
+											name="height" id="height">
+										{% endif %}
+										{% endfor %}
+										{% else %}
+										<input type="number" class="form-control" placeholder="Height in cm"
+											name="height" id="height">
+										{% endif %}
+									</div>
+									<div class="col-md-12"><label for="weight" class="labels">Weight</label>
+										{% if user.uploads %}
+										{% for up in user.uploads %}
+										{% if up.weight %}
+										<div class="bg-soft-dark curves container p-2 text-dark">{{up.weight}}</div>
+										{% else %}
+										<input type="number" class="form-control" placeholder="Weight in kg"
+											name="weight" id="weight">
+										{% endif %}
+										{% endfor %}
+										{% else %}
+										<input type="number" class="form-control" placeholder="Weight in kg"
+											name="weight" id="weight">
+										{% endif %}
+									</div>
+									<div class="col-md-12"><label for="blood_grp" class="labels">Blood Grp</label>
+										{% if user.uploads %}
+										{% for up in user.uploads %}
+										{% if up.blood_grp %}
+										<div class="bg-soft-dark curves container p-2 text-dark">{{up.blood_grp}}</div>
+										{% else %}
+										<input type="text" class="form-control" placeholder="Blood Group"
+											name="blood_grp" id="blood_grp">
+										{% endif %}
+										{% endfor %}
+										{% else %}
+										<input type="text" class="form-control" placeholder="Blood Group"
+											name="blood_grp" id="blood_grp">
+										{% endif %}
+									</div>
+									<div class="col-md-12"><label for="heart_attack" class="labels">No. of Heart
+											attacks</label>
+										{% if user.uploads %}
+										{% for up in user.uploads %}
+										{% if up.heart_attack %}
+										<div class="bg-soft-dark curves container p-2 text-dark">{{up.heart_attack}}
+										</div>
+										{% else %}
+										<input type="number" class="form-control"
+											placeholder="Enter no. of Heart Attacks" name="heart_attack"
+											id="heart_attack">
+										{% endif %}
+										{% endfor %}
+										{% else %}
+										<input type="number" class="form-control"
+											placeholder="Enter no. of Heart Attacks" name="heart_attack"
+											id="heart_attack">
+										{% endif %}
+									</div>
+								</div>
+								<div class="row mt-3">
+									<div class="col-md-6"><label class="labels" for="region">Region</label>
+										{% if user.uploads %}
+										{% for up in user.uploads %}
+										{% if up.region %}
+										<div class="bg-soft-dark curves container p-2 text-dark">{{up.region}}</div>
+										{% else %}
+										<input type="text" class="form-control" placeholder="Enter your Region"
+											name="region" id="region">
+										{% endif %}
+										{% endfor %}
+										{% else %}
+										<input type="text" class="form-control" placeholder="Enter your Region"
+											name="region" id="region">
+										{% endif %}
+									</div>
+									<div class="col-md-6"><label class="labels" for="pincode">Pincode</label>
+										{% if user.uploads %}
+										{% for up in user.uploads %}
+										{% if up.pincode %}
+										<div class="bg-soft-dark curves container p-2 text-dark">{{up.pincode}}</div>
+										{% else %}
+										<input type="text" class="form-control" placeholder="Enter your Pincode"
+											name="pincode" id="pincode">
+										{% endif %}
+										{% endfor %}
+										{% else %}
+										<input type="number" class="form-control" placeholder="Enter your Pincode"
+											name="pincode" id="pincode">
+										{% endif %}
+									</div>
+								</div>
+								<br>
+								<div class="mt-5 text-center"><button class="btn btn-primary profile-button"
+										type="submit">Save
+										Profile</button></div>
 							</div>
-							<div class="row mt-3">
-								<div class="col-md-12"><label for="height" class="labels">Height</label><input type="text"
-										class="form-control" placeholder="Enter your Height in cm" name="height" id="height"></div>
-								<div class="col-md-12"><label for="weight" class="labels">Weight</label><input type="text"
-										class="form-control" placeholder="Enter your Weight in kg" name="weight" id="weight"></div>
-								<div class="col-md-12"><label for="blood_grp" class="labels">Blood Grp</label><input type="text"
-										class="form-control" placeholder="Enter Blood Grp" name="blood_grp" id="blood_grp"></div>
-								<div class="col-md-12"><label for="heart_attack" class="labels">No. of Heart attacks</label><input
-										type="text" class="form-control" placeholder="Enter no. of Heart Attacks"
-										name="heart_attack" id="heart_attack"></div>
-							</div>
-							<div class="row mt-3">
-								<div class="col-md-6"><label class="labels" for="region">Region</label><input type="text"
-										class="form-control" placeholder="Enter your Region" name="region" id="region"></div>
-								<div class="col-md-6"><label class="labels" for="pincode">Pincode</label><input type="text"
-										class="form-control" value="" placeholder="Enter your Pincode" name="pincode" id="pincode"></div>
-							</div>
-							<div class="mt-5 text-center"><button class="btn btn-primary profile-button"
-									type="button">Save
-									Profile</button></div>
 						</div>
 					</div>
 					<div class="col-md-4">
@@ -208,25 +332,99 @@
 							<div class="d-flex justify-content-between align-items-center experience"><span>Edit
 									Health Report</span><span class="border px-3 p-1 add-experience"><i
 										class="fa fa-plus"></i>&nbsp;Health Report</span></div><br>
-							<div class="col-md-12"><label class="labels">Diabetes</label><input type="text"
-									class="form-control" placeholder="Yes/No" value=""></div>
-							<div class="col-md-12"><label class="labels">Heart Disease</label><input type="text"
-									class="form-control" placeholder="Yes/No" value=""></div>
-							<div class="col-md-12"><label class="labels">Parkinsons</label><input type="text"
-									class="form-control" placeholder="Yes/No" value=""></div>
-							<div class="col-md-12"><label class="labels">Allergies</label><input type="text"
-									class="form-control" placeholder="If Yes then Specify" value=""></div>
-							<div class="col-md-12"><label class="labels">Medication</label><input type="text"
-									class="form-control" placeholder="If Yes then Specify" value=""></div>
-							<div class="col-md-12"><label class="labels">Past Medication</label><input type="text"
-									class="form-control" placeholder="If Yes then Specify" value=""></div>
+							<div class="col-md-12"><label class="labels">Diabetes</label>
+								{% if user.diabetes %}
+								{% for diab in user.diabetes %}
+								{% if diab.pred_diabetes[0] == 1 %}
+								<div class="bg-soft-dark curves container p-2 text-dark">Yes</div>
+								{% else %}
+								<div class="bg-soft-dark curves container p-2 text-dark">No</div>
+								{% endif %}
+								{% endfor %}
+								{% else %}
+								<input type="text" class="form-control" placeholder="Do you have diabetes?"
+									value="">
+								{% endif %}
+							</div>
+							<div class="col-md-12"><label class="labels">Heart Disease</label>
+								{% if user.hearts %}
+								{% for ht in user.hearts %}
+								{% if ht.pred_heart[0] == 1 %}
+								<div class="bg-soft-dark curves container p-2 text-dark">Yes</div>
+								{% else %}
+								<div class="bg-soft-dark curves container p-2 text-dark">No</div>
+								{% endif %}
+								{% endfor %}
+								{% else %}
+								<input type="text" class="form-control" placeholder="Do you have any heart disease?"
+									value="">
+								{% endif %}
+							</div>
+							<div class="col-md-12"><label class="labels" for="park">Parkinsons</label>
+								{% if user.parkinsons %}
+								{% for par in user.parkinsons %}
+								{% if par.pred_park[0] == 1 %}
+								<div class="bg-soft-dark curves container p-2 text-dark">Yes</div>
+								{% else %}
+								<div class="bg-soft-dark curves container p-2 text-dark">No</div>
+								{% endif %}
+								{% endfor %}
+								{% else %}
+								<input type="text" class="form-control" placeholder="Do you have parkinson disease?"
+									value="">
+								{% endif %}
+							</div>
+							<div class="col-md-12"><label class="labels">Allergies</label>
+								{% if user.uploads %}
+								{% for up in user.uploads %}
+								{% if up.allergies %}
+								<div class="bg-soft-dark curves container p-2 text-dark">{{up.allergies}}</div>
+								{% else %}
+								<input type="text" class="form-control" placeholder="If Yes then Specify"
+									name="allergies" id="allergies">
+								{% endif %}
+								{% endfor %}
+								{% else %}
+								<input type="text" class="form-control" placeholder="If Yes then Specify"
+									name="allergies" id="allergies">
+								{% endif %}
+							</div>
+							<div class="col-md-12"><label class="labels">Medication</label>
+								{% if user.uploads %}
+								{% for up in user.uploads %}
+								{% if up.medic %}
+								<div class="bg-soft-dark curves container p-2 text-dark">{{up.medic}}</div>
+								{% else %}
+								<input type="text" class="form-control" placeholder="If Yes then Specify"
+									name="medic" id="medic">
+								{% endif %}
+								{% endfor %}
+								{% else %}
+								<input type="text" class="form-control" placeholder="If Yes then Specify"
+									name="medic" id="medic">
+								{% endif %}
+							</div>
+							<div class="col-md-12"><label class="labels">Past Medication</label>
+								{% if user.uploads %}
+								{% for up in user.uploads %}
+								{% if up.past_medic %}
+								<div class="bg-soft-dark curves container p-2 text-dark">{{up.past_medic}}</div>
+								{% else %}
+								<input type="text" class="form-control" placeholder="If Yes then Specify"
+									name="past_medic" id="past_medic">
+								{% endif %}
+								{% endfor %}
+								{% else %}
+								<input type="text" class="form-control" placeholder="If Yes then Specify"
+									name="past_medic" id="past_medic">
+								{% endif %}
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			</div>
-			</div>
-		</form>
+			</form>
 		</main>
 		<!-- MAIN -->
 	</section>
