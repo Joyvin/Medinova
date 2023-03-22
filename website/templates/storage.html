@@ -125,7 +125,7 @@
 		<main>
 			<div><h2>Your Medical Records</h2></div>
 			<div class="my-5">
-				<button class="btn bg-white shadow" id="utPic">
+				<button class="btn bg-primary text-white px-3 shadow" id="utPic">
 					<i class="fas fa-file-upload mr-2"></i>Upload Files
 				</button>
 				<form id="uploadFile" method="post" action="/uploadFile" enctype="multipart/form-data">
@@ -135,38 +135,23 @@
 			</div>
 			<div class="text-center">
 				<div class="row align-items-start">
-				  <div class="col">
-					<div class="card bg-light">
-						<h5 class=" p-2">Document Name</h5>
-						<div class="card p-2 m-2">
-						<img src="/images/dash.svg" height="200px"></div>
-						<p>Submitted On Date</p>
+					{% for num in r %}
+					<div class="col-4">
+						<div class="card bg-light">
+							<h5 style="text-decoration: none;" class=" p-2">{{dirs[num]}}</h5>
+							<div class="card p-2 m-2">
+								<img src="{{fPics[num]}}" height="180">
+							</div>
+							<div class="d-flex justify-content-between">
+								<a href="https://medistorage.blob.core.windows.net/imgs/{{current_user.username}}/{{dirs[num]}}" class="btn btn-info m-3 shadow"><i class="fa fa-trash-alt mr-3"></i>Download</a>
+								<form action="/deleteBlob" method="post">
+									<input type="text" id="blob" value="{{dirs[num]}}" name="my_file" hidden>
+									<button id="delBlob" type="submit" class="btn btn-danger m-3 shadow"><i class="fa fa-trash-alt mr-3"></i>Delete</button>
+								</form>
+							</div>
+						</div>
 					</div>
-				  </div>
-				  <div class="col">
-					<div class="card bg-light">
-						<h5 class=" p-2">Document Name</h5>
-						<div class="card p-2 m-2">
-						<img src="/images/dash.svg" height="200px"></div>
-						<p>Submitted On Date</p>
-					</div>
-				  </div>
-				  <div class="col">
-					<div class="card bg-light">
-						<h5 class=" p-2">Document Name</h5>
-						<div class="card p-2 m-2">
-						<img src="/images/dash.svg" height="200px"></div>
-						<p>Submitted On Date</p>
-					</div>
-				  </div>
-				  <div class="col">
-					<div class="card bg-light">
-						<h5 class=" p-2">Document Name</h5>
-						<div class="card p-2 m-2">
-						<img src="/images/dash.svg" height="200px"></div>
-						<p>Submitted On Date</p>
-					</div>
-				  </div>
+					{% endfor %}
 				</div>
 			  </div>
 		</main>
@@ -175,27 +160,20 @@
 	<!-- CONTENT -->
 
 
+	<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
-	<script src="static/js/dashboard.js"></script>
 	<script src="static/js/storage.js"></script>
+	<script>
+	</script>
 </body>
 
 </html>

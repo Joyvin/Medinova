@@ -21,15 +21,6 @@ Sign Up
                         <div class="text-center mt-2">
                             <h6>Sign up to continue to Medinova</h6>
                         </div>
-                        <div class="text-center mt-3">
-                            <a href="#">
-                                <button class="border border-primary align-items-center btn w-75 hover-shadow-primary">
-                                    <img style="width: 1.5em" class="img-fluid me-2" src="static/images/avatar.png"
-                                        alt="">
-                                    Continue with Google
-                                </button>
-                            </a>
-                        </div>
                         <form method="POST" enctype="multipart/form-data">
                             <div class="mt-3">
                                 <div class="mb-3">
@@ -60,21 +51,13 @@ Sign Up
                                         placeholder="Enter confirm password">
                                 </div>
 
-
-                                <div class="form-check">
-                                    <input v-model="tnc" type="checkbox" class="form-check-input"
-                                        id="auth-terms-condition-check">
-                                    <label class="form-check-label" for="auth-terms-condition-check">I accept <a
-                                            class="text-dark">Terms and Conditions</a></label>
-                                </div>
-
                                 <div class="mt-3 text-end">
                                     <button class="btn btn-primary w-sm waves-effect waves-light"
                                         type="submit">Register</button>
                                 </div>
 
                                 <div class="mt-4 text-center">
-                                    <p class="text-muted mb-0">Already have an account ? <a href="/login"
+                                    <p class="text-muted mb-0">Already have an account ? <a style="text-decoration: none;" href="/login"
                                             class="fw-medium text-primary"> Login</a></p>
                                 </div>
                             </div>

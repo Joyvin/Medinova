@@ -25,4 +25,5 @@ $("#store").click(function(){
           '<i class="fa fa-thumbs-down"></i>',
         cancelButtonAriaLabel: 'Thumbs down'
       })
-})
+});
+

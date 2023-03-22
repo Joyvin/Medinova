@@ -49,6 +49,15 @@ def admin():
         return render_template("admin.html", user=current_user)
     else:
         return 
+    
+@views.route('/deleteBlob', methods=['POST'])
+def delete():
+    file = request.form['my_file']
+    print(f"{current_user.username}/{file}")
+    blob_service_client = BlobServiceClient(account_url="https://medistorage.blob.core.windows.net/", credential="Wkgdqz4BTnzbN3DdmxIpvDAsV7Y0H2yW489m0AFggD+iEsSmeISD5MWNtICaagrPVLLlq2b9pPGd+AStKALxBA==")
+    blob_client = blob_service_client.get_blob_client(container='imgs', blob=f"{current_user.username}/{file}")
+    blob_client.delete_blob()
+    return redirect('/storage')
 
 @views.route('/storage')
 def index():
@@ -56,9 +65,12 @@ def index():
     container_client = blob_service_client.get_container_client(container='imgs')
 
     blob_list = container_client.list_blobs()
-    dirs = [i.split('/')[1] for i in blob_list if i.name.split('/')[0] == current_user.username]
+    dirs = [i.name.split('/')[1] for i in blob_list if i.name.split('/')[0] == current_user.username]
+    fPics = []
+    for i in range(len(dirs)):
+        fPics.append(f"static/images/block{random.randint(1, 5)}.svg")
     print(dirs)
-    return render_template("storage.html", user=current_user, dirs=dirs)
+    return render_template("storage.html", user=current_user, dirs=dirs, fPics=fPics, r=range(len(dirs)))
 
 def scan(src):
     url = "https://medinova-func.azurewebsites.net/api/medifunc?task=face"
